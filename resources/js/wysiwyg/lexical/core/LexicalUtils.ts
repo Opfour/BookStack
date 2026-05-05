@@ -783,39 +783,6 @@ export function isTab(
   return key === 'Tab' && !altKey && !ctrlKey && !metaKey;
 }
 
-export function isBold(
-  key: string,
-  altKey: boolean,
-  metaKey: boolean,
-  ctrlKey: boolean,
-): boolean {
-  return (
-    key.toLowerCase() === 'b' && !altKey && controlOrMeta(metaKey, ctrlKey)
-  );
-}
-
-export function isItalic(
-  key: string,
-  altKey: boolean,
-  metaKey: boolean,
-  ctrlKey: boolean,
-): boolean {
-  return (
-    key.toLowerCase() === 'i' && !altKey && controlOrMeta(metaKey, ctrlKey)
-  );
-}
-
-export function isUnderline(
-  key: string,
-  altKey: boolean,
-  metaKey: boolean,
-  ctrlKey: boolean,
-): boolean {
-  return (
-    key.toLowerCase() === 'u' && !altKey && controlOrMeta(metaKey, ctrlKey)
-  );
-}
-
 export function isParagraph(key: string, shiftKey: boolean): boolean {
   return isReturn(key) && !shiftKey;
 }

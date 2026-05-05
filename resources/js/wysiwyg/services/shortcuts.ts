@@ -1,4 +1,11 @@
-import {$getSelection, COMMAND_PRIORITY_HIGH, FORMAT_TEXT_COMMAND, KEY_ENTER_COMMAND, LexicalEditor} from "lexical";
+import {
+    $getSelection,
+    COMMAND_PRIORITY_HIGH,
+    FORMAT_TEXT_COMMAND,
+    KEY_ENTER_COMMAND,
+    LexicalEditor,
+    TextFormatType
+} from "lexical";
 import {
     cycleSelectionCalloutFormats,
     formatCodeBlock, insertOrUpdateLink,
@@ -27,8 +34,8 @@ function wrapFormatAction(formatAction: (editor: LexicalEditor) => any): Shortcu
     };
 }
 
-function toggleInlineCode(editor: LexicalEditor): boolean {
-    editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
+function toggleInlineFormat(editor: LexicalEditor, format: TextFormatType): boolean {
+    editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
     return true;
 }
 
@@ -39,8 +46,11 @@ type ShortcutAction = (editor: LexicalEditor, context: EditorUiContext) => boole
  * We use "meta" as an abstraction for ctrl/cmd depending on platform.
  */
 const baseActionsByKeys: Record<string, ShortcutAction> = {
-    'meta+8': toggleInlineCode,
-    'meta+shift+e': toggleInlineCode,
+    'meta+8': (e) => toggleInlineFormat(e, 'code'),
+    'meta+shift+e': (e) => toggleInlineFormat(e, 'code'),
+    'meta+b': (e) => toggleInlineFormat(e, 'bold'),
+    'meta+i': (e) => toggleInlineFormat(e, 'italic'),
+    'meta+u': (e) => toggleInlineFormat(e, 'underline'),
     'meta+o': wrapFormatAction((e) => toggleSelectionAsList(e, 'number')),
     'meta+p': wrapFormatAction((e) => toggleSelectionAsList(e, 'bullet')),
     'meta+k': (editor, context) => {
