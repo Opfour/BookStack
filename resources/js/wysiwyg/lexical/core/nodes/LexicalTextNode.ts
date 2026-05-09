@@ -657,12 +657,17 @@ export class TextNode extends LexicalNode {
       element.removeAttribute('class');
     }
 
-    // Apply whitespace replacement to the element
-    element.textContent = text;
-
     // Remove placeholder tag if redundant
     if (element.nodeName === 'SPAN' && !element.getAttribute('style')) {
       element = document.createTextNode(text);
+    } else {
+      // Apply whitespace replaced text to the element
+      // Search down the child chain in the event this element is already wrapped
+      let child: Element = element;
+      while (child.childElementCount > 0) {
+        child = child.children[0];
+      }
+      child.textContent = text;
     }
 
     // This is the only way to properly add support for most clients,
