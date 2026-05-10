@@ -18,9 +18,20 @@ export class EditorContextToolbar extends EditorContainerUiElement {
     }
 
     protected buildDOM(): HTMLElement {
-        return el('div', {
+        const toolbar = el('div', {
             class: 'editor-context-toolbar',
         }, this.getChildren().map(child => child.getDOMElement()));
+
+        // Focus back on the editor on escape press
+        toolbar.addEventListener('keydown', (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                event.stopPropagation();
+                this.getContext().editor.focus();
+            }
+        }, {signal: this.abortController.signal});
+
+        return toolbar;
     }
 
     /**
