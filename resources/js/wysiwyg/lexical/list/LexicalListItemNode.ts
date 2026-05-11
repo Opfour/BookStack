@@ -6,7 +6,7 @@
  *
  */
 
-import type {ListNode, ListType} from './';
+import type {ListNode, ListType} from './LexicalListNode';
 import type {
   BaseSelection,
   DOMConversionMap,
@@ -32,7 +32,7 @@ import {
 } from 'lexical';
 import invariant from 'lexical/shared/invariant';
 
-import {$createListNode, $isListNode} from './';
+import {$createListNode, $isListNode} from './LexicalListNode';
 import {mergeLists} from './formatList';
 import {isNestedListNode} from './utils';
 import {el} from "../../utils/dom";

@@ -63,7 +63,6 @@ import {
   toggleTextFormatType,
 } from './LexicalUtils';
 import {$createTabNode, $isTabNode} from './nodes/LexicalTabNode';
-import {$selectSingleNode} from "../../utils/selection";
 
 export type TextPointType = {
   _selection: BaseSelection;
@@ -2222,6 +2221,12 @@ export function $createRangeSelection(): RangeSelection {
 
 export function $createNodeSelection(): NodeSelection {
   return new NodeSelection(new Set());
+}
+
+function $selectSingleNode(node: LexicalNode): void {
+  const nodeSelection = $createNodeSelection();
+  nodeSelection.add(node.getKey());
+  $setSelection(nodeSelection);
 }
 
 export function $internalCreateSelection(

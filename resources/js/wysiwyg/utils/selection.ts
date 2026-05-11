@@ -17,6 +17,7 @@ import {$setBlocksType} from "@lexical/selection";
 
 import {$getNearestNodeBlockParent, $getParentOfType, nodeHasAlignment} from "./nodes";
 import {CommonBlockAlignment} from "lexical/nodes/common";
+import {$isListItemNode} from "@lexical/list";
 
 const lastSelectionByEditor = new WeakMap<LexicalEditor, BaseSelection|null>;
 
@@ -76,9 +77,33 @@ export function $selectionContainsTextFormat(selection: BaseSelection | null, fo
     return false;
 }
 
+function createNewBlockIfSelectionIsSingleListItemText(selection: BaseSelection): void {
+    const startEnd = selection.getStartEndPoints();
+    if (!startEnd) {
+        return;
+    }
+
+    const startBlock = $getNearestNodeBlockParent(startEnd[0].getNode());
+    const endBlock = $getNearestNodeBlockParent(startEnd[1].getNode());
+    const isSingleListItemTextSelection = $isListItemNode(startBlock) && startBlock.getKey() === endBlock?.getKey();
+
+    if (isSingleListItemTextSelection) {
+        const wrapper = $createParagraphNode();
+        const startNode = startEnd[0].getNode();
+        startNode.insertBefore(wrapper);
+        wrapper.append(...selection.getNodes());
+    }
+}
+
 export function $toggleSelectionBlockNodeType(matcher: LexicalNodeMatcher, creator: LexicalElementNodeCreator) {
     const selection = $getSelection();
     const blockElement = selection ? $getNearestBlockElementAncestorOrThrow(selection.getNodes()[0]) : null;
+
+    const inListItem = $isListItemNode(blockElement);
+    if (inListItem && selection) {
+        createNewBlockIfSelectionIsSingleListItemText(selection);
+    }
+
     if (selection && matcher(blockElement)) {
         $setBlocksType(selection, $createParagraphNode);
     } else {
